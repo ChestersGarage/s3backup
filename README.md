@@ -1,6 +1,6 @@
 # s3backup
 
-S3backup is a small and light-weight Docker image based on the Alpine Linux official image (alpine:latest) that periodically backups up specified folders to an AWS S3 bucket.
+S3backup is a small and light-weight Docker image based on the Alpine Linux official image (alpine:latest) that periodically backs up specified folders to an AWS S3 bucket.
 
 ## Volumes
 
@@ -87,8 +87,8 @@ docker exec -it s3backup /bin/sh
 ## More Information
 
 - AWS CLI docs for "aws s3 sync ..."
--- http://docs.aws.amazon.com/cli/latest/reference/s3/sync.html
+  - http://docs.aws.amazon.com/cli/latest/reference/s3/sync.html
 - AWS S3 pricing:
--- https://aws.amazon.com/s3/pricing/
--- https://aws.amazon.com/s3/reduced-redundancy/
+  - https://aws.amazon.com/s3/pricing/
+  - https://aws.amazon.com/s3/reduced-redundancy/
 
