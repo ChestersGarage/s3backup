@@ -75,3 +75,20 @@ docker exec -it s3backup backup
 ```
 docker exec -it s3backup /bin/sh
 ```
+
+## Useful Options
+
+- The default configuration does not delete files in the S3 bucket. It only overwrites and adds files. If you'd like a more lean sync, you can add the option to delete files from S3 that no longer exist on your source:
+
+```
+-e "AWSS3OPTIONS=--delete"
+```
+
+## More Information
+
+- AWS CLI docs for "aws s3 sync ..."
+-- http://docs.aws.amazon.com/cli/latest/reference/s3/sync.html
+- AWS S3 pricing:
+-- https://aws.amazon.com/s3/pricing/
+-- https://aws.amazon.com/s3/reduced-redundancy/
+
