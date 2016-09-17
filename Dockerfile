@@ -1,19 +1,13 @@
 # Run options can be specified at container start time or interactively
-#   schedule - Starts or updates cron with specified schedule.
-#              Start-up: Sets the schedule, starts cron and leaves container running. (default)
-#              Interactive: Updates the schedule and drops to a shell.
+#   schedule - Start-up only: Sets the schedule, starts cron and leaves container running. (default)
 #   backup   - Runs a backup now. 
 #              Start-up: Runs a backup and stops container when the backup completes.
 #              Interactive: Backup will run now without changing exisitng schedule, then drops to a shell. (default)
-#   stop     - Cleans up running aws processes and stops the container.
-#              Start-up: Cleans up prior unclean stop, and stops container.
-#              Interactive: Stops container clean.
-#              Also invoked by "docker stop ..."
-# Backups set a lock file and always check for existing lock file before running a backup.
+# Backup sets a lock file and checks for existing lock file before running a backup.
  
 FROM alpine:latest
 
-MAINTAINER Mark Chester <mark@chesterfamily.org>
+MAINTAINER Mark Chester <mark@chestersgarage.com>
 
 RUN apk --no-cache add python py-pip
 RUN pip install awscli
