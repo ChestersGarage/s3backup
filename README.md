@@ -33,11 +33,12 @@ You may specify one of the following backup schedules:
 - weekly  - Runs a backup every week.
 - monthly - Runs a backup every month.
 
-The default backup schedule is "hourly".
+**If left unspecified, the default backup schedule is "hourly".**
 
 ## Examples
 
-To back up your `Music` and `Photos` folders in your home directory once per day:
+- To back up your `Music` and `Photos` folders in your home directory once per day:
+
 ```
 docker run -d \
 -v /home/user/Music:/data/Music:ro \
@@ -50,10 +51,10 @@ docker run -d \
 chestersgarage/s3backup
 ```
 
-
-To back up the Media directory on your unRAID server once per week, keep a
+- To back up the Media directory on your unRAID server once per week, keep a
 persistent backup log in /var/log/s3backup/s3backup.log, and use reduced redundancy
 S3 storage to save a few pennies:
+
 ```
 docker run -d \
 -v /mnt/user/Media:/data/Media:ro \
