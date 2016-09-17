@@ -52,13 +52,13 @@ chestersgarage/s3backup
 ```
 
 - To back up the Media directory on your unRAID server once per week, keep a
-persistent backup log in /var/log/s3backup/s3backup.log, and use reduced redundancy
-S3 storage to save a few pennies:
+persistent backup log in /mnt/cache/appdata/s3backup/logs, and use reduced
+redundancy S3 storage to save a few pennies:
 
 ```
 docker run -d \
 -v /mnt/user/Media:/data/Media:ro \
--v /var/log/s3backup:/var/log:rw \
+-v /mnt/cache/appdata/s3backup/logs:/var/log:rw \
 -e "ACCESS_KEY_ID=<youraccesskeyid>" \
 -e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" \
 -e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" \
