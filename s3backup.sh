@@ -6,7 +6,7 @@ SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY:?"You didn't specify your SECRET_ACCESS_KE
 S3PATH=${S3PATH:?"You didn't specify your S3PATH"}
 PERIOD=${PERIOD:-hourly}
 AWSS3OPTIONS=${AWSS3OPTIONS}
-AWS_S3_REGION=${AWS_S3_REGION:-us-east-1}
+AWSS3REGION=${AWSS3REGION:-us-east-1}
 
 LOCKFILE="/var/lock/s3backup.lock"
 LOGFILE="/var/log/s3backup.log"
@@ -20,7 +20,7 @@ case $OPERATION in
   schedule)
     echo "$(date) Establishing AWS account settings." >> $LOGFILE
     mkdir -p /root/.aws
-    echo -e "[profile s3backup]\noutput = table\nregion = ${AWS_S3_REGION}" > /root/.aws/config
+    echo -e "[profile s3backup]\noutput = table\nregion = ${AWSS3REGION}" > /root/.aws/config
     echo -e "[s3backup]\naws_access_key_id = ${ACCESS_KEY_ID}\naws_secret_access_key = ${SECRET_ACCESS_KEY}" > /root/.aws/credentials
     chmod -R go-rwx /root/.aws
 

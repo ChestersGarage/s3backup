@@ -17,17 +17,18 @@ You must provide the following environment variables when you run the container:
 - AWSS3OPTIONS      - Custom parameters for "aws s3 sync ..."
 
 You may provide the following optional variables as well:
-- PERIOD - Sets the backup schedule (see below)
+- PERIOD      - Sets the backup schedule (see below)
+- AWSS3REGION - Defaults to "us-east-1"
 
 ### Scheduler Options
 
 You may specify one of the following backup schedules:
 (I'm still trying to find out what day and time of day the longer periods run.)
-- 15min   - Runs a backup every 15 minutes.
-- hourly  - Runs a backup every hour on the hour.
-- daily   - Runs a backup every day.
-- weekly  - Runs a backup every week.
-- monthly - Runs a backup every month.
+- 15min   - Runs a backup every 15 minutes
+- hourly  - Runs a backup every hour on the hour
+- daily   - Runs a backup every day
+- weekly  - Runs a backup every week
+- monthly - Runs a backup every month
 
 **If left unspecified, the default backup schedule is "hourly".**
 
@@ -60,4 +61,17 @@ docker run -d \
 -e "AWSS3OPTIONS=--storage-class REDUCED_REDUNDANCY" \
 --name s3backup \
 chestersgarage/s3backup
+```
+## Interacting
+
+- Connect to the container to run a manual backup:
+
+```
+docker exec -it s3backup backup
+```
+
+- Connect to the container just to poke aroud:
+
+```
+docker exec -it s3backup /bin/sh
 ```
