@@ -34,7 +34,14 @@ so that you can keep that information when removing and re-running the container
 To back up your `Music` and `Photos` folders in your home directory once per day:
 
 ```
-docker run -d -v /home/user/Music:/data/Music:ro -v /home/user/Photos:/data/Photos:ro -e "ACCESS_KEY_ID=<youraccesskeyid>" -e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" -e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" -e "PERIOD=daily" chestersgarage/s3backup
+docker run -d \
+-v /home/user/Music:/data/Music:ro \
+-v /home/user/Photos:/data/Photos:ro \
+-e "ACCESS_KEY_ID=<youraccesskeyid>" \
+-e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" \
+-e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" \
+-e "PERIOD=daily" \
+chestersgarage/s3backup
 ```
 
 To back up the Media directory on your unRAID server once per week, keep a
@@ -42,6 +49,14 @@ persistent backup log in /var/log/s3backup.log, and use reduced redundancy
 S3 storage to save a few pennies:
 
 ```
-docker run -d -v /mnt/user/Media:/data/Media:ro -v /var/log/s3backup.log:/var/log/s3backup.log:rw -e "ACCESS_KEY_ID=<youraccesskeyid>" -e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" -e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" -e "PERIOD=weekly" -e "AWSS3OPTIONS=--storage-class REDUCED_REDUNDANCY" chestersgarage/s3backup
+docker run -d \
+-v /mnt/user/Media:/data/Media:ro \
+-v /var/log/s3backup.log:/var/log/s3backup.log:rw \
+-e "ACCESS_KEY_ID=<youraccesskeyid>" \
+-e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" \
+-e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" \
+-e "PERIOD=weekly" \
+-e "AWSS3OPTIONS=--storage-class REDUCED_REDUNDANCY" \
+chestersgarage/s3backup
 ```
 
