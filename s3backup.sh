@@ -5,7 +5,7 @@ ACCESS_KEY_ID=${ACCESS_KEY_ID:?"You didn't specify your ACCESS_KEY_ID"}
 SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY:?"You didn't specify your SECRET_ACCESS_KEY"}
 S3PATH=${S3PATH:?"You didn't specify your S3PATH"}
 PERIOD=${PERIOD:-hourly}
-AWSCLIPARAMS=${AWSCLIPARAMS}
+AWSS3OPTIONS=${AWSS3OPTIONS}
 AWS_S3_REGION=${AWS_S3_REGION:-us-east-1}
 
 LOCKFILE="/var/lock/s3backup.lock"
@@ -19,6 +19,7 @@ fi
 case $OPERATION in
   schedule)
     echo "$(date) Establishing AWS account settings." >> $LOGFILE
+    mkdir -p /root/.aws
     echo -e "[profile s3backup]\noutput = table\nregion = ${AWS_S3_REGION}" > /root/.aws/config
     echo -e "[s3backup]\naws_access_key_id = ${ACCESS_KEY_ID}\naws_secret_access_key = ${SECRET_ACCESS_KEY}" > /root/.aws/credentials
     chmod -R go-rwx /root/.aws
@@ -34,7 +35,7 @@ case $OPERATION in
     echo "ACCESS_KEY_ID=$ACCESS_KEY_ID" >> $CRONFILE
     echo "SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY" >> $CRONFILE
     echo "S3PATH=$S3PATH" >> $CRONFILE
-    echo "AWSCLIPARAMS=\"$AWSCLIPARAMS\"" >> $CRONFILE
+    echo "AWSS3OPTIONS=\"$AWSS3OPTIONS\"" >> $CRONFILE
     echo "/bin/sh /s3backup.sh backup" >> $CRONFILE
     chmod +x $CRONFILE
 
@@ -50,9 +51,9 @@ case $OPERATION in
     then
       echo "$(date) Lock file $LOCKFILE detected. Skipping this backup run." | tee -a $LOGFILE
     else
-      echo "$(date) Running backup: \"aws s3 sync /data/ $S3PATH $AWSCLIPARAMS\"" | tee -a $LOGFILE
+      echo "$(date) Running backup: \"aws s3 sync /data/ $S3PATH $AWSS3OPTIONS\"" | tee -a $LOGFILE
       touch $LOCKFILE
-      aws s3 sync /data/ $S3PATH $AWSCLIPARAMS --profile=s3backup 2>&1 | tee -a $LOGFILE
+      aws s3 sync /data/ $S3PATH $AWSS3OPTIONS --profile=s3backup 2>&1 | tee -a $LOGFILE
       rm -f $LOCKFILE
       echo "$(date) Backup finished." | tee -a $LOGFILE
     fi

@@ -14,10 +14,6 @@ RUN pip install awscli
 RUN rm -rf /tmp/pip_build_root/
 
 RUN mkdir -p /data
-RUN mkdir -p /root/.aws
-RUN echo -e "[profile s3backup]\noutput = table\nregion = ${AWS_S3_REGION:-us-east-1}" >> /root/.aws/config
-RUN echo -e "[s3backup]\naws_access_key_id = ${ACCESS_KEY_ID}\naws_secret_access_key = ${SECRET_ACCESS_KEY}" >> /root/.aws/credentials
-RUN chmod -R go-rwx /root/.aws
 
 ADD s3backup.sh /
 

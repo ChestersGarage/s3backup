@@ -8,8 +8,9 @@ that backups up specified folders to an AWS S3 bucket.
 ### Volumes
 Mount your data folders as volumes under the `/data` directory.
 
-It may also be beneficial to mount `/var/log/s3backup.log` outside of the container
-so that you can keep that information when removing and re-running the container.
+It may also be beneficial to mount the container's `/var/log` directory outside
+of the container so that you can keep that information when removing and
+re-running the container.
 
 ### Environment Variables
 You must provide the following environment variables when you run the
@@ -45,6 +46,7 @@ docker run -d \
 -e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" \
 -e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" \
 -e "PERIOD=daily" \
+--name s3backup \
 chestersgarage/s3backup
 ```
 
@@ -61,6 +63,6 @@ docker run -d \
 -e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" \
 -e "PERIOD=weekly" \
 -e "AWSS3OPTIONS=--storage-class REDUCED_REDUNDANCY" \
+--name s3backup \
 chestersgarage/s3backup
 ```
-
