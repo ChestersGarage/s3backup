@@ -18,11 +18,12 @@ You may provide the following optional variables as well:
 - PERIOD - Sets the backup schedule (see below)
 
 You may specify one of the following backup schedules:
+(I'm still trying to find out what day and time of day the longer periods run.)
 - 15min   - Runs a backup every 15 minutes.
 - hourly  - Runs a backup every hour on the hour.
-- daily   - Runs a backup every day at Midnight.
-- weekly  - Runs a backup every Sunday(?) at Midnight.
-- monthly - Runs a backup every first day of the month at Midnight
+- daily   - Runs a backup every day.
+- weekly  - Runs a backup every week.
+- monthly - Runs a backup every month.
 
 The default backup schedule is "hourly".
 
