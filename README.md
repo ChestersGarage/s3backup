@@ -8,7 +8,7 @@ that backups up specified folders to an AWS S3 bucket.
 ### Volumes
 Mount your data folders as volumes under the `/data` directory.
 
-It may also be beneficial to mount /var/log/s3backup.log outside of the container
+It may also be beneficial to mount `/var/log/s3backup.log` outside of the container
 so that you can keep that information when removing and re-running the container.
 
 ### Environment Variables
