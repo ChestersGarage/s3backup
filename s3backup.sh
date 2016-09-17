@@ -1,8 +1,8 @@
 #!/bin/sh
 
 OPERATION="$1"
-ACCESS_KEY=${ACCESS_KEY:?"You didn't specify your ACCESS_KEY"}
-SECRET_KEY=${SECRET_KEY:?"You didn't specify your SECRET_KEY"}
+ACCESS_KEY_ID=${ACCESS_KEY_ID:?"You didn't specify your ACCESS_KEY_ID"}
+SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY:?"You didn't specify your SECRET_ACCESS_KEY"}
 S3PATH=${S3PATH:?"You didn't specify your S3PATH"}
 PERIOD=${PERIOD:-hourly}
 AWSCLIPARAMS=${AWSCLIPARAMS}
@@ -20,7 +20,7 @@ case $OPERATION in
   schedule)
     echo "$(date) Establishing AWS account settings." >> $LOGFILE
     echo -e "[profile s3backup]\noutput = table\nregion = ${AWS_S3_REGION}" > /root/.aws/config
-    echo -e "[s3backup]\naws_access_key_id = ${ACCESS_KEY}\naws_secret_access_key = ${SECRET_KEY}" > /root/.aws/credentials
+    echo -e "[s3backup]\naws_access_key_id = ${ACCESS_KEY_ID}\naws_secret_access_key = ${SECRET_ACCESS_KEY}" > /root/.aws/credentials
     chmod -R go-rwx /root/.aws
 
     CRONFILE="/etc/periodic/$PERIOD/s3backup"
@@ -31,8 +31,8 @@ case $OPERATION in
     # Populate the cron file
     echo "$(date) Writing cron file $CRONFILE." >> $LOGFILE
     echo "#!/bin/sh" > $CRONFILE
-    echo "ACCESS_KEY=$ACCESS_KEY" >> $CRONFILE
-    echo "SECRET_KEY=$SECRET_KEY" >> $CRONFILE
+    echo "ACCESS_KEY_ID=$ACCESS_KEY_ID" >> $CRONFILE
+    echo "SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY" >> $CRONFILE
     echo "S3PATH=$S3PATH" >> $CRONFILE
     echo "AWSCLIPARAMS=\"$AWSCLIPARAMS\"" >> $CRONFILE
     echo "/bin/sh /s3backup.sh backup" >> $CRONFILE

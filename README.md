@@ -5,8 +5,13 @@ that backups up specified folders to an AWS S3 bucket.
 
 ## Usage
 
+### Volumes
 Mount your data folders as volumes under the `/data` directory.
 
+It may also be beneficial to mount /var/log/s3backup.log outside of the container
+so that you can keep that information when removing and re-running the container.
+
+### Environment Variables
 You must provide the following environment variables when you run the
 container:
 - ACCESS_KEY_ID     - Your AWS IAM Access Key ID
@@ -17,6 +22,7 @@ container:
 You may provide the following optional variables as well:
 - PERIOD - Sets the backup schedule (see below)
 
+#### Scheduler Options
 You may specify one of the following backup schedules:
 (I'm still trying to find out what day and time of day the longer periods run.)
 - 15min   - Runs a backup every 15 minutes.
@@ -26,9 +32,6 @@ You may specify one of the following backup schedules:
 - monthly - Runs a backup every month.
 
 The default backup schedule is "hourly".
-
-It may also be beneficial to mount /var/log/s3backup.log outside of the container
-so that you can keep that information when removing and re-running the container.
 
 ## Examples
 
