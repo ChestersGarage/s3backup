@@ -1,20 +1,16 @@
 # s3backup
 
-S3backup is a small and light-weight Docker container based on Alpine Linux
-that backups up specified folders to an AWS S3 bucket.
+S3backup is a small and light-weight Docker container based on Alpine Linux that backups up specified folders to an AWS S3 bucket.
 
 ## Volumes
 
 Mount your data folders as volumes under the `/data` directory.
 
-It may also be beneficial to mount the container's `/var/log` directory outside
-of the container so that you can keep that information when removing and
-re-running the container.
+It may also be beneficial to mount the container's `/var/log` directory outside of the container so that you can keep that information when removing and re-running the container.
 
 ## Environment Variables
 
-You must provide the following environment variables when you run the
-container:
+You must provide the following environment variables when you run the container:
 - ACCESS_KEY_ID     - Your AWS IAM Access Key ID
 - SECRET_ACCESS_KEY - Your AWS IAM Secret Access Key
 - S3PATH            - Your S3 bucket and path
@@ -51,9 +47,7 @@ docker run -d \
 chestersgarage/s3backup
 ```
 
-- To back up the Media directory on your unRAID server once per week, keep a
-persistent backup log in /mnt/cache/appdata/s3backup/logs, and use reduced
-redundancy S3 storage to save a few pennies:
+- To back up the Media directory on your unRAID server once per week, keep a persistent backup log in /mnt/cache/appdata/s3backup/logs, and use reduced redundancy S3 storage to save a few pennies:
 
 ```
 docker run -d \
