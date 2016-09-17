@@ -1,6 +1,6 @@
 # s3backup
 
-S3backup is a small and light-weight Docker container based on Alpine Linux that backups up specified folders to an AWS S3 bucket.
+S3backup is a small and light-weight Docker image based on the Alpine Linux official image (alpine:latest) that periodically backups up specified folders to an AWS S3 bucket.
 
 ## Volumes
 
@@ -14,13 +14,13 @@ You must provide the following environment variables when you run the container:
 - ACCESS_KEY_ID     - Your AWS IAM Access Key ID
 - SECRET_ACCESS_KEY - Your AWS IAM Secret Access Key
 - S3PATH            - Your S3 bucket and path
-- AWSS3OPTIONS      - Custom parameters for "aws s3 sync ..."
 
 You may provide the following optional variables as well:
-- PERIOD      - Sets the backup schedule (see below)
-- AWSS3REGION - Defaults to "us-east-1"
+- PERIOD       - Sets the backup schedule (see below)
+- AWSS3REGION  - Defaults to "us-east-1"
+- AWSS3OPTIONS - Custom parameters for "aws s3 sync ..."
 
-### Scheduler Options
+#### Scheduler Options
 
 You may specify one of the following backup schedules:
 (I'm still trying to find out what day and time of day the longer periods run.)

@@ -23,3 +23,4 @@ ADD s3backup.sh /
 
 ENTRYPOINT ["/bin/sh","/s3backup.sh"]
 CMD ["schedule"]
+
