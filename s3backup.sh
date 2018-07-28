@@ -18,6 +18,12 @@ fi
 
 case $OPERATION in
   schedule)
+    if [[ -f $LOCKFILE ]]
+    then
+      rm -f $LOCKFILE
+      killall aws
+    fi
+
     echo "$(date) Establishing AWS account settings." >> $LOGFILE
     mkdir -p /root/.aws
     echo -e "[profile s3backup]\noutput = table\nregion = ${AWSS3REGION}" > /root/.aws/config
@@ -27,8 +33,10 @@ case $OPERATION in
     CRONFILE="/etc/periodic/$PERIOD/s3backup"
   
     echo "$(date) The backup schedule is: $PERIOD." >> $LOGFILE
-    echo -n "$(date) Will back up the following data:" >> $LOGFILE
+    echo "$(date) Will back up the following data:" >> $LOGFILE
+    echo "" >> $LOGFILE
     ls /data >> $LOGFILE
+    echo "" >> $LOGFILE
     # Populate the cron file
     echo "$(date) Writing cron file $CRONFILE." >> $LOGFILE
     echo "#!/bin/sh" > $CRONFILE
