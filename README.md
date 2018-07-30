@@ -22,18 +22,51 @@ You may provide the following optional variables as well:
 
 #### Scheduler Options
 
-You may specify one of the following backup schedules:
-- 15min   - Runs a backup every 15 minutes
-- hourly  - Runs a backup every hour on the hour
-- daily   - Runs a backup every day @ 02:00 GMT
-- weekly  - Runs a backup every week on Saturday @ 03:00 GMT
-- monthly - Runs a backup every month on the 1st @ 05:00 GMT
+There are two ways to schedule when your backups start:
+- Periodically (PERIOD)
+- Cron Schedule (CRON)
 
-**If left unspecified, the default backup schedule is "hourly".**
+You can also set the run time (RUN_TIME) to limit how long the backup can run.
+
+Specify only one of PERIOD or CRON when starting your container. If both are specified, PERIOD will be ignored.
+
+##### Period
+
+You may specify one of the following backup PERIODs:
+- PERIOD=15min   - Runs a backup every 15 minutes
+- PERIOD=hourly  - Runs a backup every hour on the hour
+- PERIOD=daily   - Runs a backup every day @ 02:00 GMT
+- PERIOD=weekly  - Runs a backup every week on Saturday @ 03:00 GMT
+- PERIOD=monthly - Runs a backup every month on the 1st @ 05:00 GMT
+
+**If left unspecified, the default is a cron schedule below.**
+
+##### Cron
+
+You can (will be able to shortly) pass in a custom CRON schedule statement for more granular control of your start times.
+- CRON=<cron_schedule_pattern>
+
+The time and date fields are:
+-       field          allowed values
+-       -----          --------------
+-       minute         0-59
+-       hour           0-23
+-       day of month   1-31
+-       month          1-12
+-       day of week    0-7 (0 or 7 is Sunday)
+
+**If left unspecified, the default is daily at 07:00 GMT ("0 7 * * *").**
+
+##### Run Time limit
+
+You can specify how long the backup job will run before being stopped. 
+- RUN_TIME=<number_of_seconds>
+
+**If left unspecified, the default run time is 28800 seconds (8 hours).**
 
 ## Examples
 
-- To back up your `Music` and `Photos` folders in your home directory once per day:
+- To back up your `Music` and `Photos` folders in your home directory once per day @ 02:00 GMT:
 
 ```
 docker run -d \
@@ -47,7 +80,7 @@ docker run -d \
 chestersgarage/s3backup
 ```
 
-- To back up the Media directory on your unRAID server once per week, keep a persistent backup log in /mnt/cache/appdata/s3backup/logs, and use reduced redundancy S3 storage to save a few pennies:
+- To back up the Media directory on your unRAID server daily from 23:00-05:00 Pacific time (06:00-12:00 GMT) ONLY, keep a persistent backup log in /mnt/cache/appdata/s3backup/logs, and use reduced redundancy S3 storage to save a few pennies:
 
 ```
 docker run -d \
@@ -56,7 +89,8 @@ docker run -d \
 -e "ACCESS_KEY_ID=<youraccesskeyid>" \
 -e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" \
 -e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" \
--e "PERIOD=weekly" \
+-e "CRON=0 6 * * *" \
+-e "RUN_TIME=21600" \
 -e "AWSS3OPTIONS=--storage-class REDUCED_REDUNDANCY" \
 --name s3backup \
 chestersgarage/s3backup
@@ -67,6 +101,12 @@ chestersgarage/s3backup
 
 ```
 docker exec -it s3backup backup
+```
+
+- Connect to the container to view current configuration:
+
+```
+docker exec -it s3backup show
 ```
 
 - Connect to the container just to poke aroud:
