@@ -48,11 +48,11 @@ You can pass in a custom cron schedule pattern for more granular control of your
 - E.g.: "Every Saturday at 5:02 AM GMT" -> CRON_PATTERN=05 02 * * 6
 
 The time and date fields are:
--       minute         0-59
--       hour           0-23
--       day of month   1-31
--       month          1-12
--       day of week    0-7 (0 or 7 is Sunday)
+- minute         0-59
+- hour           0-23
+- day of month   1-31
+- month          1-12
+- day of week    0-7 (0 or 7 is Sunday)
 
 **If left unspecified, the default is daily at 07:00 GMT.** (`"CRON_PATTERN=0 7 * * *"`)
 
