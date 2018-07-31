@@ -18,17 +18,18 @@ fi
 # Time stuff
 RUN_TIME=${RUN_TIME:-28800}
 
-if [[ $PERIOD ]] && [[ $CRON ]]
+if [[ "$PERIOD" ]] && [[ "$CRON_PATTERN" ]]
 then
-  echo "$(date) Both PERIOD and CRON were specified. Ignoring PERIOD." >> $LOGFILE
+  echo "$(date) Both PERIOD and CRON_PATTERN were specified. Ignoring PERIOD." >> $LOGFILE
 fi
 
-if [[ $CRON ]]
+if [[ -z "$CRON_PATTERN" ]]
 then
-  CRON=$CRON:-0 7 * * *}
-  unset PERIOD
-else
   PERIOD=${PERIOD:-daily}
+else
+  CRON_PATTERN="${CRON_PATTERN:-0 7 * * *}"
+  PERIOD=""
+  unset PERIOD
 fi
 
 # OK, let's go...
@@ -66,7 +67,7 @@ case $OPERATION in
     else
       # We append the info to root's crontab file, directly
       CRONFILE="/var/spool/cron/crontabs/root"
-      echo "$(date) The backup schedule is: $CRON." >> $LOGFILE
+      echo "$(date) The backup schedule is: $CRON_PATTERN." >> $LOGFILE
       echo "$(date) Will back up the following data:" >> $LOGFILE
       echo "" >> $LOGFILE
       ls /data >> $LOGFILE
@@ -77,7 +78,7 @@ case $OPERATION in
       echo "SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY" >> $CRONFILE
       echo "S3PATH=$S3PATH" >> $CRONFILE
       echo "AWSS3OPTIONS=\"$AWSS3OPTIONS\"" >> $CRONFILE
-      echo "$CRON /bin/sh /s3backup.sh backup" >> $CRONFILE
+      echo "$CRON_PATTERN /bin/sh /s3backup.sh backup" >> $CRONFILE
     fi
 
     # Start the cron daemon
@@ -141,10 +142,11 @@ case $OPERATION in
     echo "    backup   - Starts a backup now, using established config."
     echo "    show     - Displays usage and configurations"
     echo ""
-    echo "Schedule:  ${CRON}${PERIOD}"
-    echo "Run time:  $RUN_TIME"
-    echo "Cron file: $CRONFILE"
-    echo "Log file:  $LOGFILE"
+    echo "Schedule: ${CRON_PATTERN}${PERIOD}"
+    echo "Run time: $RUN_TIME"
+    echo "Current time: $(date) (Cron pattern: $(date '+%M %H %d %m %u'))"
+    echo "Log file: $LOGFILE"
+    echo "Data folders: $(ls /data)"
     exit 0
   ;;
 esac
