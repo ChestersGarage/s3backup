@@ -1,10 +1,10 @@
 # s3backup
 
-S3backup is a small and light-weight Docker image based on the Alpine Linux official image (alpine:latest) that periodically backs up specified folders to an AWS S3 bucket.
+S3backup is a small and light-weight Docker image based on the Alpine Linux official image (alpine:latest) that backs up specified folders to an AWS S3 bucket, on a periodic or cron schedule.
 
 ## Volumes
 
-Mount your data folders as volumes under the `/data` directory.
+Mount the folders you wish to back up as volumes under the container's `/data` directory.
 
 It may also be beneficial to mount the container's `/var/log` directory outside of the container so that you can keep that information when removing and re-running the container.
 
@@ -16,7 +16,8 @@ You must provide the following environment variables when you run the container:
 - S3PATH            - Your S3 bucket and path
 
 You may provide the following optional variables as well:
-- PERIOD       - Sets the backup schedule (see below)
+- CRON_PATTERN - Sets the backup on an explicit cron schedule (see below)
+- PERIOD       - Sets the backup on a periodic schedule (see below)
 - AWSS3REGION  - Defaults to "us-east-1"
 - AWSS3OPTIONS - Custom parameters for "aws s3 sync ..."
 
@@ -24,11 +25,11 @@ You may provide the following optional variables as well:
 
 There are two ways to schedule when your backups start:
 - Periodically (PERIOD)
-- Cron Schedule (CRON)
+- Cron Schedule (CRON_PATTERN)
 
 You can also set the run time (RUN_TIME) to limit how long the backup can run.
 
-Specify only one of PERIOD or CRON when starting your container. If both are specified, PERIOD will be ignored.
+Specify only one of PERIOD or CRON_PATTERN when starting your container. If both are specified, PERIOD will be ignored.
 
 ##### Period
 
@@ -43,8 +44,8 @@ You may specify one of the following backup PERIODs:
 
 ##### Cron
 
-You can (will be able to shortly) pass in a custom CRON schedule statement for more granular control of your start times.
-- CRON=<cron_schedule_pattern>
+You can pass in a custom cron schedule pattern for more granular control of your start times.
+- CRON_PATTERN=<cron_schedule_pattern>
 
 The time and date fields are:
 -       field          allowed values
@@ -55,7 +56,7 @@ The time and date fields are:
 -       month          1-12
 -       day of week    0-7 (0 or 7 is Sunday)
 
-**If left unspecified, the default is daily at 07:00 GMT ("0 7 * * *").**
+**If left unspecified, the default is daily at 07:00 GMT.** (`"CRON_PATTERN=0 7 * * *"`)
 
 ##### Run Time limit
 
@@ -89,7 +90,7 @@ docker run -d \
 -e "ACCESS_KEY_ID=<youraccesskeyid>" \
 -e "SECRET_ACCESS_KEY=<yoursecretaccesskey>" \
 -e "S3PATH=s3://<yours3bucket>/<youroptionalfolder>/" \
--e "CRON=0 6 * * *" \
+-e "CRON_PATTERN=0 6 * * *" \
 -e "RUN_TIME=21600" \
 -e "AWSS3OPTIONS=--storage-class REDUCED_REDUNDANCY" \
 --name s3backup \
