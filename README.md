@@ -45,11 +45,9 @@ You may specify one of the following backup PERIODs:
 ##### Cron
 
 You can pass in a custom cron schedule pattern for more granular control of your start times.
-- CRON_PATTERN=<cron_schedule_pattern>
+- E.g.: "Every Saturday at 5:02 AM GMT" -> CRON_PATTERN=05 02 * * 6
 
 The time and date fields are:
--       field          allowed values
--       -----          --------------
 -       minute         0-59
 -       hour           0-23
 -       day of month   1-31
