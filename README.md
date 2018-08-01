@@ -42,7 +42,7 @@ You may specify one of the following backup PERIODs:
 
 **If left unspecified, the default is a cron schedule below.**
 
-##### Cron
+##### Cron Pattern
 
 You can pass in a custom cron schedule pattern for more granular control of your start times.
 - E.g.: "Every Saturday at 5:02 AM GMT" -> `CRON_PATTERN=05 02 * * 6`
@@ -56,7 +56,7 @@ The time and date fields are:
 
 **If left unspecified, the default is daily at 07:00 GMT.** (`"CRON_PATTERN=0 7 * * *"`)
 
-##### Run Time limit
+##### Run Time Limit
 
 You can specify how long the backup job will run before being stopped. 
 - RUN_TIME=<number_of_seconds>
@@ -101,6 +101,7 @@ chestersgarage/s3backup
 ```
 docker exec -it s3backup backup
 ```
+
 - Stop a running backup:
 
 ```
