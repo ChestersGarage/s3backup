@@ -104,7 +104,7 @@ docker exec -it s3backup backup
 - Stop a running backup:
 
 ```
-docker exec -it s3backup backup
+docker exec -it s3backup stop
 ```
 
 - View current configuration:
