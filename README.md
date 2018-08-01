@@ -99,19 +99,19 @@ chestersgarage/s3backup
 - Run a manual backup:
 
 ```
-docker exec -it s3backup backup
+docker exec -it s3backup /s3backup.sh backup
 ```
 
 - Stop a running backup:
 
 ```
-docker exec -it s3backup stop
+docker exec -it s3backup /s3backup.sh stop
 ```
 
 - View current configuration:
 
 ```
-docker exec -it s3backup show
+docker exec -it s3backup /s3backup.sh show
 ```
 
 - Poke around:
