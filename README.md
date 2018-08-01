@@ -114,7 +114,7 @@ docker exec -it s3backup stop
 docker exec -it s3backup show
 ```
 
-- Poke aroud:
+- Poke around:
 
 ```
 docker exec -it s3backup /bin/sh
