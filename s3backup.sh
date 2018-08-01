@@ -99,13 +99,14 @@ case $OPERATION in
       # Grab start time and determine end time from run time
       START_TIME=$(date +%s)
       END_TIME=$(( $START_TIME + $RUN_TIME ))
-      echo "$(date) Running backup: \"aws s3 sync /data/ $S3PATH $AWSS3OPTIONS\"" | tee -a $LOGFILE
 
       # Set the marker
       touch $LOCKFILE
 
       # Run this in the background so we can monitor and kill after run time elapses.
-      aws s3 sync --quiet /data/ $S3PATH $AWSS3OPTIONS --profile=s3backup 2>&1 | tee -a $LOGFILE &
+      COMMAND="aws s3 sync --quiet /data/ $S3PATH $AWSS3OPTIONS --profile=s3backup"
+      echo "$(date) Running backup: \"$COMMAND\"" | tee -a $LOGFILE
+      $COMMAND 2>&1 | tee -a $LOGFILE &
 
       # Loop until we either time out or the command exits
       NOW=$(date +%s)
