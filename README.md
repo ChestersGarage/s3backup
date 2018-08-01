@@ -96,19 +96,24 @@ chestersgarage/s3backup
 ```
 ## Interacting
 
-- Connect to the container to run a manual backup:
+- Run a manual backup:
+
+```
+docker exec -it s3backup backup
+```
+- Stop a running backup:
 
 ```
 docker exec -it s3backup backup
 ```
 
-- Connect to the container to view current configuration:
+- View current configuration:
 
 ```
 docker exec -it s3backup show
 ```
 
-- Connect to the container just to poke aroud:
+- Poke aroud:
 
 ```
 docker exec -it s3backup /bin/sh
