@@ -11,15 +11,12 @@
 
 FROM alpine:latest
 
-MAINTAINER Mark Chester <mark@chestersgarage.com>
-
 RUN apk --no-cache add python py-pip && \
-pip install awscli && \
-rm -rf /tmp/pip_build_root/ && \
-mkdir -p /data
+    pip install awscli && \
+    rm -rf /tmp/pip_build_root/ && \
+    mkdir -p /data
 
 ADD s3backup.sh /
 
 ENTRYPOINT ["/bin/sh","/s3backup.sh"]
 CMD ["schedule"]
-
