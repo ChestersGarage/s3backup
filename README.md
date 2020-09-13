@@ -54,7 +54,7 @@ The time and date fields are:
 - month          1-12
 - day of week    0-7 (0 or 7 is Sunday)
 
-**If left unspecified, the default is daily at 07:00 UTC.** (equivalent to `"CRON_PATTERN=0 7 * * *"`)
+**If left unspecified, the default is daily at 07:00 UTC** -> `"CRON_PATTERN=0 7 * * *"`
 
 ##### Run Time Limit
 
@@ -79,7 +79,7 @@ docker run -d \
 chestersgarage/s3backup
 ```
 
-- To back up the Media directory on your unRAID server daily from 23:00 to 05:00 PDT (06:00-12:00 UTC), keep a persistent backup log in /mnt/cache/appdata/s3backup/logs, and use reduced redundancy S3 storage to save a few pennies:
+- To back up the Media directory on your unRAID server daily starting at 11:00 PM and ending at 5:00 AM PDT, even if the backup hasn't completed (start @ 06:00 UTC, end after 6 hours), keep a persistent backup log in /mnt/cache/appdata/s3backup/logs, and use reduced redundancy S3 storage to save a few pennies:
 
 ```
 docker run -d \
