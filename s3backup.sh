@@ -65,7 +65,8 @@ EOF
       echo "$(date) The backup schedule is: $PERIOD." >> $LOGFILE
       echo "$(date) Will back up the following data:" >> $LOGFILE
       echo "" >> $LOGFILE
-      ls --color=never /data >> $LOGFILE
+      FOLDERS=$(ls --color=never /data)
+      for folder in ${FOLDERS}; do echo ${folder} >> ${LOGFILE}; done
       echo "" >> $LOGFILE
       echo "$(date) Writing cron file $CRONFILE." >> $LOGFILE
       cat > $CRONFILE <<EOF
@@ -92,7 +93,8 @@ EOF
       echo "$(date) The backup schedule is: $CRON_PATTERN." >> $LOGFILE
       echo "$(date) Will back up the following data:" >> $LOGFILE
       echo "" >> $LOGFILE
-      ls --color=never /data >> $LOGFILE
+      FOLDERS=$(ls --color=never /data)
+      for folder in ${FOLDERS}; do echo ${folder} >> ${LOGFILE}; done
       echo "" >> $LOGFILE
       # Populate the cron file
       echo "$(date) Writing schedule to cron file $CRONFILE." >> $LOGFILE
