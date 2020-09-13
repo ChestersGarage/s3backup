@@ -9,9 +9,9 @@
 # Backup sets a lock file and checks for existing lock file before running
 # a backup.
 
-FROM alpine:latest
+FROM alpine:3.12
 
-RUN apk --no-cache add python py-pip && \
+RUN apk --no-cache add python3 py3-pip && \
     pip install awscli && \
     rm -rf /tmp/pip_build_root/ && \
     mkdir -p /data
