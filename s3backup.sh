@@ -23,16 +23,19 @@ then
   echo "$(date) Both PERIOD and CRON_PATTERN were specified. Ignoring PERIOD." >> $LOGFILE
 fi
 
+# Check for empty cron pattern
 if [[ -z "$CRON_PATTERN" ]]
 then
+  # Set PERIOD to daily if not provided
   PERIOD=${PERIOD:-daily}
 else
+  # We can't have both set
   CRON_PATTERN="${CRON_PATTERN:-0 7 * * *}"
   PERIOD=""
   unset PERIOD
 fi
 
-# OK, let's go...
+# OK, let's go
 case $OPERATION in
   schedule)
     if [[ -f $LOCKFILE ]]
@@ -43,8 +46,16 @@ case $OPERATION in
 
     echo "$(date) Establishing AWS account settings." >> $LOGFILE
     mkdir -p /root/.aws
-    echo -e "[profile s3backup]\noutput = table\nregion = ${AWSS3REGION}" > /root/.aws/config
-    echo -e "[s3backup]\naws_access_key_id = ${ACCESS_KEY_ID}\naws_secret_access_key = ${SECRET_ACCESS_KEY}" > /root/.aws/credentials
+    cat > /root/.aws/config <<EOF
+[profile s3backup]
+output = table
+region = ${AWSS3REGION}
+EOF
+    cat > /root/.aws/credentials <<EOF
+[s3backup]
+aws_access_key_id = ${ACCESS_KEY_ID}
+aws_secret_access_key = ${SECRET_ACCESS_KEY}
+EOF
     chmod -R go-rwx /root/.aws
 
     if [[ $PERIOD ]]
@@ -57,16 +68,27 @@ case $OPERATION in
       ls /data >> $LOGFILE
       echo "" >> $LOGFILE
       echo "$(date) Writing cron file $CRONFILE." >> $LOGFILE
-      echo "#!/bin/sh" > $CRONFILE
-      echo "ACCESS_KEY_ID=$ACCESS_KEY_ID" >> $CRONFILE
-      echo "SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY" >> $CRONFILE
-      echo "S3PATH=$S3PATH" >> $CRONFILE
-      echo "AWSS3OPTIONS=\"$AWSS3OPTIONS\"" >> $CRONFILE
-      echo "/bin/sh /s3backup.sh backup" >> $CRONFILE
+      cat > $CRONFILE <<EOF
+#!/bin/sh
+ACCESS_KEY_ID=$ACCESS_KEY_ID
+SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
+S3PATH="$S3PATH"
+AWSS3OPTIONS="$AWSS3OPTIONS"
+/bin/sh /s3backup.sh backup
+EOF
       chmod +x $CRONFILE
+      cat > /etc/crontabs/root <<EOF
+# Make sure the periodic schedules are clean
+# min   hour    day     month   weekday command
+*/15    *       *       *       *       run-parts /etc/periodic/15min
+0       *       *       *       *       run-parts /etc/periodic/hourly
+0       2       *       *       *       run-parts /etc/periodic/daily
+0       3       *       *       6       run-parts /etc/periodic/weekly
+0       5       1       *       *       run-parts /etc/periodic/monthly
+EOF
     else
       # We append the info to root's crontab file, directly
-      CRONFILE="/var/spool/cron/crontabs/root"
+      CRONFILE="/etc/crontabs/root"
       echo "$(date) The backup schedule is: $CRON_PATTERN." >> $LOGFILE
       echo "$(date) Will back up the following data:" >> $LOGFILE
       echo "" >> $LOGFILE
@@ -74,25 +96,28 @@ case $OPERATION in
       echo "" >> $LOGFILE
       # Populate the cron file
       echo "$(date) Writing schedule to cron file $CRONFILE." >> $LOGFILE
-      echo "ACCESS_KEY_ID=$ACCESS_KEY_ID" >> $CRONFILE
-      echo "SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY" >> $CRONFILE
-      echo "S3PATH=$S3PATH" >> $CRONFILE
-      echo "AWSS3OPTIONS=\"$AWSS3OPTIONS\"" >> $CRONFILE
-      echo "$CRON_PATTERN /bin/sh /s3backup.sh backup" >> $CRONFILE
+      cat > $CRONFILE <<EOF
+#!/bin/sh
+ACCESS_KEY_ID=$ACCESS_KEY_ID
+SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
+S3PATH="$S3PATH"
+AWSS3OPTIONS="$AWSS3OPTIONS"
+$CRON_PATTERN /bin/sh /s3backup.sh backup
+EOF
     fi
 
     # Start the cron daemon
     echo "$(date) Starting cron daemon." >> $LOGFILE
     crond
 
-    exec tail -F $LOGFILE
+    exec tail -Fn 25 $LOGFILE
   ;;
   backup)
     echo "$(date) Beginning backup..." | tee -a $LOGFILE
     # Check for the lock file
     if [ -e $LOCKFILE ]
     then
-      # Finding a lock file ends this run 
+      # Finding a lock file ends this run
       echo "$(date) Lock file $LOCKFILE detected. Skipping this backup run." | tee -a $LOGFILE
       exit 0
     else
