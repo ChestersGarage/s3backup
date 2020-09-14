@@ -163,12 +163,25 @@ runbackup(){
     wtlog INFO "Backup finished."
 }
 
+usage(){
+    echo "Usage: <operation>"
+    echo "Where <operation> is one of:"
+    echo "    backup   - Starts a backup now, using established config."
+    echo "    show     - Displays usage and configurations"
+    echo "    stop     - Stop a running backup."
+}
+
 # OK, let's go
-checkparams
+if [[ -z ${OPERATION} ]]
+then
+    OPERATION="$(basename $0)"
+fi
+
 case ${OPERATION} in
     schedule)
         # This is the container startup sequence.
         # It can be run manually safely, but it's really never necessary.
+        checkparams
         wtlog INFO "---Starting the s3backup container.---"
         bypasslock
         setawscreds
@@ -189,11 +202,7 @@ case ${OPERATION} in
     ;;
     show)
         # This reports usage and the current setup
-        echo "Usage: s3backup.sh <operation>"
-        echo "Where <operation> is one of:"
-        echo "    schedule - Sets the backup schedule in crontab from environment variables"
-        echo "    backup   - Starts a backup now, using established config."
-        echo "    show     - Displays usage and configurations"
+        usage
         echo ""
         echo "Schedule: ${CRON_PATTERN}${PERIOD}"
         echo "Run time: ${RUN_TIME}"
@@ -207,5 +216,11 @@ case ${OPERATION} in
         wtlog WARN "Forced stop by command."
         rm -f ${LOCKFILE}
         exit 0
+    ;;
+    *)
+        echo "Invalid startup arguments."
+        usage
+        exit 1
+    ;;
 esac
 exit 0
