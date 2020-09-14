@@ -137,7 +137,8 @@ runbackup(){
 
     # Loop until we either time out or the command exits
     NOW=$(date +%s)
-    while [[ ${NOW} -le ${END_TIME} ]]
+    BACKUP_DONE=false
+    while [[ ${NOW} -le ${END_TIME} ]] && [[ "${BACKUP_DONE}" == "false" ]]
     do
         sleep 1
         PROCS=$(ps axw | grep -v grep | grep aws | wc -l)
@@ -145,21 +146,15 @@ runbackup(){
         if [[ ${PROCS} -lt 1 ]]
         then
             wtlog INFO "Detected backup process completion."
-            break
+            BACKUP_DONE=true
         fi
         NOW=$(date +%s)
     done
 
-    if [[ ${PROCS} -ge 1 ]]
-    then
-        wtlog WARN "Backup was terminated and will resume on the next schedule."
-    fi
-
-    # Either we timed out or finished
-    # Kill it if it's still running.
-    PROCS=$(ps axw | grep -v grep | grep aws | wc -l)
+    # If it timed out, kill the aws commands
     if [[ ${PROCS} -gt 0 ]]
     then
+        wtlog WARN "Backup is being terminated and will resume on the next schedule."
         killall aws
     fi
 
@@ -210,5 +205,7 @@ case ${OPERATION} in
     stop)
         killall aws
         wtlog WARN "Forced stop by command."
+        rm -f ${LOCKFILE}
+        exit 0
 esac
 exit 0
