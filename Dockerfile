@@ -16,7 +16,7 @@ RUN apk --no-cache add python3 py3-pip && \
     rm -rf /tmp/pip_build_root/ && \
     mkdir -p /data
 
-ADD s3backup.sh
+ADD s3backup.sh /
 RUN chmod +x /s3backup.sh
 
 ENTRYPOINT ["/bin/sh","/s3backup.sh"]
