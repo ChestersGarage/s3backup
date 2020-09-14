@@ -1,6 +1,7 @@
 #!/bin/sh
 
-OPERATION="${1:-show}"
+OPERATION=$1
+
 ACCESS_KEY_ID=${ACCESS_KEY_ID:?"You didn't specify your ACCESS_KEY_ID"}
 SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY:?"You didn't specify your SECRET_ACCESS_KEY"}
 S3PATH=${S3PATH:?"You didn't specify your S3PATH"}
