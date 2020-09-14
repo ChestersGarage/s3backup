@@ -21,8 +21,7 @@ RUN chmod +x /s3backup.sh && \
     ln -s /s3backup.sh /backup && \
     ln -s /s3backup.sh /show && \
     ln -s /s3backup.sh /stop && \
-    echo 'PATH="/:$PATH"' > /etc/profile.d/path.sh && \
-    chmod +x /etc/profile.d/path.sh
+    echo 'export PATH=/:$PATH' >> /etc/profile
 
 ENTRYPOINT ["/bin/sh","/s3backup.sh"]
 CMD ["schedule"]
