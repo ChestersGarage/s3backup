@@ -15,28 +15,28 @@ wtlog(){
     echo "$(date) $1: $2" >> ${LOGFILE}
 }
 
-wtlog INFO "---Starting the s3backup container.---"
+checkparams(){
+    wtlog INFO "Evaluating schedule parameters."
+    # Time stuff
+    RUN_TIME=${RUN_TIME:-28800}
 
-wtlog INFO "Evaluating schedule parameters."
-# Time stuff
-RUN_TIME=${RUN_TIME:-28800}
+    if [[ "${PERIOD}" ]] && [[ "${CRON_PATTERN}" ]]
+    then
+        wtlog WARN "Both PERIOD and CRON_PATTERN were specified. Ignoring PERIOD."
+    fi
 
-if [[ "${PERIOD}" ]] && [[ "${CRON_PATTERN}" ]]
-then
-    wtlog WARN "Both PERIOD and CRON_PATTERN were specified. Ignoring PERIOD."
-fi
-
-# Check for empty cron pattern
-if [[ -z "${CRON_PATTERN}" ]]
-then
-    # Set PERIOD to daily if not provided
-    PERIOD=${PERIOD:-daily}
-else
-    # We can't have both set
-    CRON_PATTERN="${CRON_PATTERN:-0 7 * * *}"
-    PERIOD=""
-    unset PERIOD
-fi
+    # Check for empty cron pattern
+    if [[ -z "${CRON_PATTERN}" ]]
+    then
+        # Set PERIOD to daily if not provided
+        PERIOD=${PERIOD:-daily}
+    else
+        # We can't have both set
+        CRON_PATTERN="${CRON_PATTERN:-0 7 * * *}"
+        PERIOD=""
+        unset PERIOD
+    fi
+}
 
 checklock(){
     if [ -e ${LOCKFILE} ]
@@ -169,10 +169,12 @@ runbackup(){
 }
 
 # OK, let's go
+checkparams
 case ${OPERATION} in
     schedule)
         # This is the container startup sequence.
         # It can be run manually safely, but it's really never necessary.
+        wtlog INFO "---Starting the s3backup container.---"
         bypasslock
         setawscreds
         setbackupschedule
