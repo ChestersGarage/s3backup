@@ -90,7 +90,7 @@ ACCESS_KEY_ID=${ACCESS_KEY_ID}
 SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
 S3PATH="${S3PATH}"
 AWSS3OPTIONS="${AWSS3OPTIONS}"
-/bin/sh /s3backup.sh backup
+/bin/sh /usr/local/bin/backup
 EOF
         chmod +x ${CRONFILE}
         cat > /etc/crontabs/root <<EOF
@@ -117,7 +117,7 @@ ACCESS_KEY_ID=${ACCESS_KEY_ID}
 SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
 S3PATH="${S3PATH}"
 AWSS3OPTIONS="${AWSS3OPTIONS}"
-${CRON_PATTERN} /bin/sh /s3backup.sh backup
+${CRON_PATTERN} /bin/sh /usr/local/bin/backup
 EOF
     fi
 }
