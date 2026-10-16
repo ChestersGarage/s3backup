@@ -132,7 +132,7 @@ runbackup(){
     touch ${LOCKFILE}
 
     # Run this in the background so we can monitor and kill after run time elapses.
-    COMMAND="aws s3 sync --quiet /data/ ${S3PATH} ${AWSS3OPTIONS} --profile=s3backup"
+    COMMAND="aws s3 sync --no-progress /data/ ${S3PATH} ${AWSS3OPTIONS} --profile=s3backup"
     wtlog INFO "Running backup: \"${COMMAND}\""
     ${COMMAND} 2>&1 | tee -a ${LOGFILE} &
 
