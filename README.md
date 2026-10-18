@@ -1,6 +1,6 @@
 # s3backup
 
-S3backup is a small and light-weight Docker image based on the Alpine Linux official image (currently 3.12) that backs up specified folders to an AWS S3 bucket, on a periodic or cron schedule.
+S3backup is a small and light-weight Docker image based on the Alpine Linux official image (currently 3.13) that backs up specified folders to an AWS S3 bucket, on a periodic or cron schedule.
 
 ## Volumes
 
