@@ -1,7 +1,6 @@
-FROM alpine:3.13
+FROM alpine:3.24
 
-RUN apk --no-cache add python3 py3-pip && \
-    pip install awscli && \
+RUN apk --no-cache add python3 py3-pip aws-cli && \
     mkdir -p /data
 
 ADD s3backup.sh /usr/local/bin/
